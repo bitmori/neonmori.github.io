@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="新技能,git,hexo,写作," />
 
 
 
@@ -84,12 +84,25 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="星空航行家的旅行日志">
-<meta property="og:url" content="http://neonmori.github.io/index.html">
+<meta name="description" content="本文的命令的idea都来自于http://www.craigjperry.com/hexo-with-github-pages.html
+创建本地Hexo目录现在的hexo版本又一个问题，就是如果先git init再hexo init的话，回导致.git目录被删除，所以解决方案就是：
+——把两者的顺序换一下！
+1234$ npm install hexo -g #先安装hexo命令行工具$ hex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让我们多多利用git来方便管理hexo吧">
+<meta property="og:url" content="http://neonmori.github.io/2016/08/27/让我们多多利用git来方便管理hexo吧/index.html">
 <meta property="og:site_name" content="星空航行家的旅行日志">
+<meta property="og:description" content="本文的命令的idea都来自于http://www.craigjperry.com/hexo-with-github-pages.html
+创建本地Hexo目录现在的hexo版本又一个问题，就是如果先git init再hexo init的话，回导致.git目录被删除，所以解决方案就是：
+——把两者的顺序换一下！
+1234$ npm install hexo -g #先安装hexo命令行工具$ hex">
+<meta property="og:updated_time" content="2016-08-27T21:27:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="星空航行家的旅行日志">
+<meta name="twitter:title" content="让我们多多利用git来方便管理hexo吧">
+<meta name="twitter:description" content="本文的命令的idea都来自于http://www.craigjperry.com/hexo-with-github-pages.html
+创建本地Hexo目录现在的hexo版本又一个问题，就是如果先git init再hexo init的话，回导致.git目录被删除，所以解决方案就是：
+——把两者的顺序换一下！
+1234$ npm install hexo -g #先安装hexo命令行工具$ hex">
 
 
 
@@ -110,9 +123,9 @@
 
 
 
-  <link rel="canonical" href="http://neonmori.github.io/"/>
+  <link rel="canonical" href="http://neonmori.github.io/2016/08/27/让我们多多利用git来方便管理hexo吧/"/>
 
-  <title> 星空航行家的旅行日志 </title>
+  <title> 让我们多多利用git来方便管理hexo吧 | 星空航行家的旅行日志 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -133,9 +146,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -212,9 +223,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -234,10 +245,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/08/27/让我们多多利用git来方便管理hexo吧/" itemprop="url">
-                  让我们多多利用git来方便管理hexo吧
-                </a>
+                让我们多多利用git来方便管理hexo吧
               
             
           </h1>
@@ -277,9 +285,7 @@
       
 
       
-        
-          
-            <p>本文的命令的idea都来自于<a href="http://www.craigjperry.com/hexo-with-github-pages.html" target="_blank" rel="external">http://www.craigjperry.com/hexo-with-github-pages.html</a></p>
+        <p>本文的命令的idea都来自于<a href="http://www.craigjperry.com/hexo-with-github-pages.html" target="_blank" rel="external">http://www.craigjperry.com/hexo-with-github-pages.html</a></p>
 <h2 id="创建本地Hexo目录"><a href="#创建本地Hexo目录" class="headerlink" title="创建本地Hexo目录"></a>创建本地Hexo目录</h2><p>现在的hexo版本又一个问题，就是如果先<code>git init</code>再<code>hexo init</code>的话，回导致<code>.git</code>目录被删除，所以解决方案就是：</p>
 <p>——把两者的顺序换一下！</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo -g <span class="comment">#先安装hexo命令行工具</span></div><div class="line">$ hexo init <span class="comment">#吃我大init辣</span></div><div class="line">$ npm install <span class="comment">#快使用npm</span></div><div class="line">$ hexo s <span class="comment">#先看看能不能冒烟</span></div></pre></td></tr></table></figure>
@@ -317,130 +323,65 @@
 </ol>
 <p>这个办法的好处就是将github既当成离线备份，也当成同步机制，岂不美哉？</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/27/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-27T13:18:51-07:00" content="2016-08-27">
-              2016-08-27
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/新技能/" rel="tag">#新技能</a>
           
-            
+            <a href="/tags/git/" rel="tag">#git</a>
           
-
+            <a href="/tags/hexo/" rel="tag">#hexo</a>
           
-
-          
-          
-
+            <a href="/tags/写作/" rel="tag">#写作</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>你正在看星空航行家的旅行日志，关于时间，世界，欢乐和感悟的一本志。</p>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/27/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -448,6 +389,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -467,8 +412,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -511,6 +465,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建本地Hexo目录"><span class="nav-number">1.</span> <span class="nav-text">创建本地Hexo目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个Git仓库"><span class="nav-number">2.</span> <span class="nav-text">创建一个Git仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置git部署工具"><span class="nav-number">3.</span> <span class="nav-text">配置git部署工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正确的创建新文章的姿势"><span class="nav-number">3.1.</span> <span class="nav-text">正确的创建新文章的姿势</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -607,6 +572,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
