@@ -5,10 +5,11 @@
 # Site
 title: 星空航行家的旅行日志
 subtitle:
-description:
+description: 现在立刻马上！
 author: Kirkonväki
 language:
 timezone:
+avatar: https://avatars1.githubusercontent.com/u/2584204?v=3&s=460
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
