@@ -3,12 +3,12 @@ title: Jolokiabeat 的设计思路
 date: 2016-08-27 19:46:48
 tags: [写码,idea,go]
 ---
-##背景
+## 背景
 Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。
 
 Jolokiabeat是我在工作时遇到了需求打造的，基于elastic公司的libbeat，参考了influxdata家TICK技术栈中的Telegraf中jolokia插件的实现，并且借鉴了logstash的JMX插件的一些想法（比如模板化MBean名称提供更多的额外信息，简化查询规则等等）
 
-##架构
+## 架构
 整个程序和其他的beat系列程序一样，都采用了流水线形式的架构：
 
 [JMX_collector] => [Metrics transformer] => [LibBeat.Dispatcher]
@@ -17,7 +17,7 @@ JMX_Collector负责从Jolokia服务中拉取metrics
 Metrics transformer负责将取回的信息整理
 LibBeat.Dispatcher就是将信息发送出去的机制
 
-##配置
+## 配置
 Jolokiabeat的alpha版本最初使用TOML作为JMX查询参数的配置文件，结果兜兜转转一大圈以后，发现还是TOML最符合要求（最完美的cson并没有golang的binding，残念）
 
 除了TOML之外，JSON，YAML甚至CSON都曾经在我的考虑范围之内，但是首先JSON因为自身格式需要太多花括号而且其实不算太灵活（主要是我经常想写个注释防止自己忘记一些东西，但是JSON连最后一个逗号都不许你加，字符串只能双引号你还想双斜杠写注释？🙄）。
@@ -54,7 +54,7 @@ context = "kafka"
 
 ```
 
-##数据整合变形
+## 数据整合变形
 这是从jolokia返回的json：
 ```json
 {
