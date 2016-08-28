@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="写码,idea,go," />
 
 
 
@@ -84,15 +84,19 @@
 
 
 
-<meta name="description" content="现在立刻马上！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="星空航行家的旅行日志">
-<meta property="og:url" content="http://neonmori.github.io/index.html">
+<meta name="description" content="背景Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。
+Jolokiabeat是我在工作时遇到了需求打造的，基于elastic公司的libbeat，参考了influxdata家TICK技术栈中的Telegraf中jolokia插件的实现，并且借鉴了logstash的JMX插件的一些想法（比如模板化MBean">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jolokiabeat 的设计思路">
+<meta property="og:url" content="http://neonmori.github.io/2016/08/27/Jolokiabeat-的设计思路/index.html">
 <meta property="og:site_name" content="星空航行家的旅行日志">
-<meta property="og:description" content="现在立刻马上！">
+<meta property="og:description" content="背景Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。
+Jolokiabeat是我在工作时遇到了需求打造的，基于elastic公司的libbeat，参考了influxdata家TICK技术栈中的Telegraf中jolokia插件的实现，并且借鉴了logstash的JMX插件的一些想法（比如模板化MBean">
+<meta property="og:updated_time" content="2016-08-28T06:24:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="星空航行家的旅行日志">
-<meta name="twitter:description" content="现在立刻马上！">
+<meta name="twitter:title" content="Jolokiabeat 的设计思路">
+<meta name="twitter:description" content="背景Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。
+Jolokiabeat是我在工作时遇到了需求打造的，基于elastic公司的libbeat，参考了influxdata家TICK技术栈中的Telegraf中jolokia插件的实现，并且借鉴了logstash的JMX插件的一些想法（比如模板化MBean">
 
 
 
@@ -113,9 +117,9 @@
 
 
 
-  <link rel="canonical" href="http://neonmori.github.io/"/>
+  <link rel="canonical" href="http://neonmori.github.io/2016/08/27/Jolokiabeat-的设计思路/"/>
 
-  <title> 星空航行家的旅行日志 </title>
+  <title> Jolokiabeat 的设计思路 | 星空航行家的旅行日志 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -136,9 +140,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -215,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -237,10 +239,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/08/27/Jolokiabeat-的设计思路/" itemprop="url">
-                  Jolokiabeat 的设计思路
-                </a>
+                Jolokiabeat 的设计思路
               
             
           </h1>
@@ -280,9 +279,7 @@
       
 
       
-        
-          
-            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Jolokia真是个好东西，把本来只有JVM才能访问的JMX信息暴露成一个http服务，使得我们只需要操控REST API就能获得想要的效果。</p>
 <p>Jolokiabeat是我在工作时遇到了需求打造的，基于elastic公司的libbeat，参考了influxdata家TICK技术栈中的Telegraf中jolokia插件的实现，并且借鉴了logstash的JMX插件的一些想法（比如模板化MBean名称提供更多的额外信息，简化查询规则等等）</p>
 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>整个程序和其他的beat系列程序一样，都采用了流水线形式的架构：</p>
 <p>[JMX_collector] =&gt; [Metrics transformer] =&gt; [LibBeat.Dispatcher]</p>
@@ -303,260 +300,63 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">timestamp : <span class="number">1472167534</span></div><div class="line">status : <span class="number">200</span></div><div class="line"><span class="attr">result:</span></div><div class="line"><span class="bullet">    -</span> meta :</div><div class="line"><span class="attr">        name:</span> <span class="string">"IsrExpandsPerSec"</span></div><div class="line"><span class="attr">        type:</span> <span class="string">"ReplicaManager"</span></div><div class="line"><span class="attr">      data:</span></div><div class="line"><span class="attr">        OneMinuteRate:</span> <span class="number">0.0</span></div><div class="line"><span class="attr">        Count:</span> <span class="number">0</span></div><div class="line"><span class="attr">        MeanRate:</span> <span class="number">0.0</span></div><div class="line"><span class="attr">        FiveMinuteRate:</span> <span class="number">0.0</span></div><div class="line"><span class="attr">        FifteenMinuteRate:</span> <span class="number">0.0</span></div></pre></td></tr></table></figure>
 <p>TBC，未完待续……</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/27/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-27T14:32:20-07:00" content="2016-08-27">
-              2016-08-27
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/写码/" rel="tag">#写码</a>
           
-            
+            <a href="/tags/idea/" rel="tag">#idea</a>
           
-
-          
-
-          
-          
-
+            <a href="/tags/go/" rel="tag">#go</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>你正在看星空航行家的旅行日志，关于时间，世界，欢乐和感悟的一本志。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/08/27/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/08/27/让我们多多利用git来方便管理hexo吧/" itemprop="url">
-                  让我们多多利用git来方便管理hexo吧
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-27T13:39:46-07:00" content="2016-08-27">
-              2016-08-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>本文的命令的idea都来自于<a href="http://www.craigjperry.com/hexo-with-github-pages.html" target="_blank" rel="external">http://www.craigjperry.com/hexo-with-github-pages.html</a></p>
-<h2 id="创建本地Hexo目录"><a href="#创建本地Hexo目录" class="headerlink" title="创建本地Hexo目录"></a>创建本地Hexo目录</h2><p>现在的hexo版本又一个问题，就是如果先<code>git init</code>再<code>hexo init</code>的话，回导致<code>.git</code>目录被删除，所以解决方案就是：</p>
-<p>——把两者的顺序换一下！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo -g <span class="comment">#先安装hexo命令行工具</span></div><div class="line">$ hexo init <span class="comment">#吃我大init辣</span></div><div class="line">$ npm install <span class="comment">#快使用npm</span></div><div class="line">$ hexo s <span class="comment">#先看看能不能冒烟</span></div></pre></td></tr></table></figure>
-<p>至此hexo目录应该就已经成功设置了，这里插播一下<code>.gitignore</code>文件，用<a href="https://www.gitignore.io/api/node" target="_blank" rel="external">https://www.gitignore.io/api/node</a> 这里的内容，可以解决大多数问题</p>
-<p>接下来我们一套标jŭn的<code>git init</code>流程走一遍就可以了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git init</div><div class="line">$ git add .</div><div class="line">$ git commit -m <span class="string">'Initial commit'</span></div></pre></td></tr></table></figure>
-<h2 id="创建一个Git仓库"><a href="#创建一个Git仓库" class="headerlink" title="创建一个Git仓库"></a>创建一个Git仓库</h2><ol>
-<li><p>在github网站上创建一个同名的空仓库：<your-user-name>.github.io</your-user-name></p>
-</li>
-<li><p>将本地hexo目录的remote指向这个仓库：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git remote add origin &lt;remote repo URL&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>然后在本地创建一个orphan分支（这个中文应该怎么叫？孤立分支？）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git checkout --orphan meta-content <span class="comment">#创建孤立分支</span></div><div class="line">$ git push -u origin meta-content <span class="comment">#不要忘记顺便推送一下</span></div><div class="line">$ git checkout master <span class="comment">#记得切换回master</span></div><div class="line">$ git rm -rf * <span class="comment">#清除master里面的内容</span></div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="配置git部署工具"><a href="#配置git部署工具" class="headerlink" title="配置git部署工具"></a>配置git部署工具</h2><p><em>首先确定从ssh密钥可以正常工作</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
-<p>编辑_config.yml文件，修改里面的deploy字段：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  type:</span> git</div><div class="line"><span class="attr">  repo:</span> ssh://git@github.com/&lt;Your-Github-Username&gt;/&lt;your-github-username&gt;.github.io</div><div class="line"><span class="attr">  branch:</span> master</div></pre></td></tr></table></figure>
-<p>然后我们就可以</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>轻松走上hexo写作之路！</p>
-<h3 id="正确的创建新文章的姿势"><a href="#正确的创建新文章的姿势" class="headerlink" title="正确的创建新文章的姿势"></a>正确的创建新文章的姿势</h3><ol>
-<li><p>首先确定我们所在的分支：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git branch</div></pre></td></tr></table></figure>
-<p>应该是<code>meta-content</code></p>
-</li>
-<li><p>然后就是一套组合拳：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ git checkout -b my-next-post-topic</div><div class="line">$ hexo new post <span class="string">"My Next Post Topic"</span></div><div class="line">$ git add .</div><div class="line">$ git commit -m <span class="string">"started new topic"</span></div><div class="line">$ git push -u origin my-next-post-topic</div></pre></td></tr></table></figure>
-</li>
-<li><p>当我们确认写好这篇文章以后，再把这个分支合并回<code>meta-content</code>去，最后再运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>这个办法的好处就是将github既当成离线备份，也当成同步机制，岂不美哉？</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -564,6 +364,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -583,8 +387,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="https://avatars1.githubusercontent.com/u/2584204?v=3&s=460"
@@ -627,6 +440,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#架构"><span class="nav-number">2.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据整合变形"><span class="nav-number">4.</span> <span class="nav-text">数据整合变形</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -723,6 +547,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
