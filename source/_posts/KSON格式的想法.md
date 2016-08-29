@@ -1,7 +1,7 @@
 ---
 title: KSON格式的想法
 date: 2016-08-28 13:24:11
-tags: idea, 写码, golang
+tags: [idea, 写码, golang]
 ---
 
 ## 背景
@@ -40,7 +40,7 @@ Kola Simple Object Notation.
 ```kson
 name: "name"
 mode: "MODE"
-hash = 
+hash =
   type = '_'
   info = 'x'
   ex:
@@ -57,6 +57,3 @@ list:
   field2: 200
 ;
 ```
-
-
-
