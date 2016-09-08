@@ -238,6 +238,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/01/CSON的Pegex语法解析/" itemprop="url">
+                  CSON的Pegex语法解析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-09-01T20:42:02-07:00" content="2016-09-01">
+              2016-09-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">%grammar cson</div><div class="line">%version <span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span></div><div class="line">%include pegex-atoms</div></pre></td></tr></table></figure>
+<p>文档的开头就是定义名称，版本和包含<code>pegex-atoms</code>预定义的规则</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">cson: TERMINATOR? - toplevelBlock?</div><div class="line"></div><div class="line">toplevelBlock: value TERMINATOR?</div><div class="line"></div><div class="line">value:</div><div class="line">  | null</div><div class="line">  | booleanLiteral</div><div class="line">  | numberLiteral</div><div class="line">  | stringLiteral</div><div class="line">  | arrayLiteral</div><div class="line">  | objectLiteral</div><div class="line">  | implicitObjectLiteral</div></pre></td></tr></table></figure>
+<p>cson文档都由一个值组成，可以是空文件，也可以是<code>null</code>，布尔值，数字，字符串，数组或是对象。<br>在pegex的语法中，<code>-</code>代表任意多（可以为零）个空白字符，而<code>+</code>代表至少有一个空白字符。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id: <span class="regexp">/ [ DOLLAR ALPHAS UNDER ][ DOLLAR WORDS ]* /</span></div></pre></td></tr></table></figure>
+<p>对象成员名可以是字符串或是这里定义的<code>id</code>类型：<code>$, _, 0~9, A~Z, a~z</code>，只要是在coffeescript/javascript中合法的变量名都可以用在这里。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">numberLiteral:</div><div class="line">  | <span class="string">'0b'</span> binaryBit+</div><div class="line">  | <span class="string">'0o'</span> octalDigit+</div><div class="line">  | <span class="string">'0x'</span> hexDigit+</div><div class="line">  | decimalNumber</div><div class="line"></div><div class="line">decimalNumber: <span class="regexp">/(</span></div><div class="line">  DASH?</div><div class="line">  (: '0' | [1-9] DIGIT* )</div><div class="line">  (: DOT DIGIT* )?</div><div class="line">  (: [eE] [ DASH PLUS ]? DIGIT+ )?</div><div class="line">)/</div><div class="line"></div><div class="line">decimalDigit: <span class="regexp">/[0-9]/</span></div><div class="line">hexDigit: <span class="regexp">/[0-9a-fA-F]/</span></div><div class="line">octalDigit: <span class="regexp">/[0-7]/</span></div><div class="line">binaryBit: <span class="regexp">/[01]/</span></div></pre></td></tr></table></figure>
+<p>数字值，cson可以使用二进制，八进制和十六进制表示整数。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">booleanLiteral:</div><div class="line">  | (TRUE | YES | ON)</div><div class="line">  | (FALSE | NO | OFF)</div><div class="line"></div><div class="line">null: <span class="string">'null'</span></div></pre></td></tr></table></figure>
+<p>布尔值可以用<code>true, yes, on</code>表示真值，<code>false, no, off</code>表示伪值。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">stringLiteral:</div><div class="line">  | <span class="string">'"""'</span> (stringData | SINGLE | (DOUBLE DOUBLE? !DOUBLE))+ <span class="string">'"""'</span></div><div class="line">  | <span class="regexp">/ SINGLE SINGLE SINGLE /</span></div><div class="line">    (stringData | DOUBLE | <span class="string">'#'</span> | ( SINGLE? !SINGLE))+</div><div class="line">    <span class="regexp">/ SINGLE SINGLE SINGLE /</span></div><div class="line">  | <span class="string">'"'</span> (stringData | SINGLE)* <span class="string">'"'</span></div><div class="line">  | SINGLE (stringData | <span class="string">'"'</span> | <span class="string">'#'</span>)* SINGLE</div><div class="line"></div><div class="line">stringData:</div><div class="line"><span class="comment">#   | [^"'\\#]</span></div><div class="line">  | UnicodeEscapeSequence</div><div class="line">  | <span class="string">'\x'</span> (hexDigit hexDigit)</div><div class="line">  | <span class="string">'\0'</span> !decimalDigit</div><div class="line">  | <span class="string">'\0'</span> =decimalDigit</div><div class="line">  | <span class="string">'\b'</span></div><div class="line">  | <span class="string">'\t'</span></div><div class="line">  | <span class="string">'\n'</span></div><div class="line">  | <span class="string">'\v'</span></div><div class="line">  | <span class="string">'\f'</span></div><div class="line">  | <span class="string">'\r'</span></div><div class="line">  | <span class="string">'\' DOT</span></div><div class="line">  | '<span class="comment">#' !LCURLY</span></div><div class="line"></div><div class="line">UnicodeEscapeSequence: <span class="regexp">/ BACK 'u' hexDigit&#123;4&#125; /</span></div></pre></td></tr></table></figure>
+<p>字符串支持<code>&quot;&quot;&quot;</code>或者<code>&#39;&#39;&#39;</code>包围的多行字符串。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">ws: <span class="regexp">/(: whitespace+ (: blockComment whitespace+ )? )/</span></div><div class="line"></div><div class="line">comment: blockComment | singleLineComment</div><div class="line"></div><div class="line">singleLineComment: <span class="string">'#'</span> (!TERM ANY)*</div><div class="line"></div><div class="line">blockComment: <span class="regexp">/(:</span></div><div class="line">HASH HASH HASH</div><div class="line">  [^ HASH ] ([^ HASH ] | HASH HASH? (! HASH ))*</div><div class="line">HASH HASH HASH</div><div class="line">)/</div><div class="line"></div><div class="line">whitespace: <span class="regexp">/ WS /</span></div></pre></td></tr></table></figure>
+<p>cson支持一个<code>#</code>开头的单行注释和被一对<code>###</code>包围的多行注释。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">INDENT: + <span class="comment">#XXXXX /\uEFEF/</span></div><div class="line"></div><div class="line">DEDENT: (TERMINATOR? -) <span class="comment">#XXXXX /\uEFFE/</span></div><div class="line"></div><div class="line">TERM: <span class="regexp">/ (: CR? NL ) /</span></div><div class="line"><span class="comment">#   | /\uEFFF/</span></div><div class="line"></div><div class="line">TERMINATOR: (- comment? TERM blockComment?)+</div><div class="line"></div><div class="line">TERMINDENT: TERMINATOR INDENT</div></pre></td></tr></table></figure>
+<p>缩进处理的规则。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">arrayLiteral:</div><div class="line">  <span class="string">'['</span> arrayLiteralBody TERMINATOR? - <span class="string">']'</span></div><div class="line"></div><div class="line">arrayLiteralBody:</div><div class="line">  | TERMINDENT arrayLiteralMemberList DEDENT</div><div class="line">  | - arrayLiteralMemberList?</div><div class="line"></div><div class="line">arrayLiteralMemberList:</div><div class="line">  arrayLiteralMember -</div><div class="line">  (arrayLiteralMemberSeparator - arrayLiteralMember -)*</div><div class="line">  arrayLiteralMemberSeparator?</div><div class="line"></div><div class="line">arrayLiteralMember:</div><div class="line">  | value</div><div class="line">  | TERMINDENT implicitObjectLiteral DEDENT</div><div class="line"></div><div class="line">arrayLiteralMemberSeparator:</div><div class="line">  | (TERMINATOR - COMMA?)</div><div class="line">  | (<span class="string">','</span> TERMINATOR? -)</div><div class="line"></div><div class="line"><span class="comment"># <span class="doctag">TODO:</span> fix this:</span></div><div class="line"><span class="comment"># (DEDENT ',' TERMINDENT)</span></div></pre></td></tr></table></figure>
+<p>数组语法的处理</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">objectLiteral:</div><div class="line">  <span class="string">'&#123;'</span> objectLiteralBody TERMINATOR? - <span class="string">'&#125;'</span></div><div class="line"></div><div class="line">objectLiteralBody:</div><div class="line">  | TERMINDENT objectLiteralMemberList DEDENT</div><div class="line">  | - objectLiteralMemberList?</div><div class="line"></div><div class="line">objectLiteralMemberList:</div><div class="line">  objectLiteralMember -</div><div class="line">  (objectLiteralMemberSeparator - objectLiteralMember -)*</div><div class="line">  COMMA?</div><div class="line"></div><div class="line">objectLiteralMemberSeparator: arrayLiteralMemberSeparator</div><div class="line"></div><div class="line">objectLiteralMember:</div><div class="line">  | implicitObjectLiteralMember</div><div class="line">  | ObjectInitialiserKeys</div><div class="line"></div><div class="line">ObjectInitialiserKeys:</div><div class="line">  | id</div><div class="line">  | string</div><div class="line">  | Numbers</div><div class="line"></div><div class="line">implicitObjectLiteral:</div><div class="line">  implicitObjectLiteralMemberList</div><div class="line"></div><div class="line">implicitObjectLiteralMemberList:</div><div class="line">  implicitObjectLiteralMember</div><div class="line">  (implicitObjectLiteralMemberSeparator implicitObjectLiteralMember)*</div><div class="line"></div><div class="line">implicitObjectLiteralMemberSeparator:</div><div class="line">  | TERMINATOR COMMA? -</div><div class="line">  | - <span class="string">','</span> TERMINATOR? -</div><div class="line"></div><div class="line">implicitObjectLiteralMember:</div><div class="line">  ObjectInitialiserKeys - <span class="string">':'</span> - implicitObjectLiteralMemberValue</div><div class="line"></div><div class="line">implicitObjectLiteralMemberValue:</div><div class="line">  | singleLineImplicitObjectLiteral</div><div class="line">  | value</div><div class="line">  | TERMINDENT value DEDENT</div><div class="line"></div><div class="line">singleLineImplicitObjectLiteral:</div><div class="line">  singleLineImplicitObjectLiteralMemberList</div><div class="line"></div><div class="line">singleLineImplicitObjectLiteralMemberList:</div><div class="line">  implicitObjectLiteralMember</div><div class="line">  (</div><div class="line">    singleLineImplicitObjectLiteralMemberSeparator</div><div class="line">    implicitObjectLiteralMember</div><div class="line">  )*</div><div class="line"></div><div class="line">singleLineImplicitObjectLiteralMemberSeparator: - <span class="string">','</span> -</div><div class="line"></div><div class="line">keyValueSeparator:</div><div class="line">  | - <span class="string">'=&gt;'</span> -</div><div class="line">  | - <span class="string">'|&gt;'</span> -</div><div class="line">  | - <span class="string">':='</span> -</div><div class="line">  | - <span class="string">':'</span>  -</div><div class="line">  | - <span class="string">'='</span>  -</div><div class="line"></div><div class="line">TRUE: <span class="regexp">/'true' (! identifierPart )/</span></div><div class="line">YES: <span class="regexp">/'yes' (! identifierPart )/</span></div><div class="line">ON: <span class="regexp">/'on' (! identifierPart )/</span></div><div class="line"></div><div class="line">FALSE: <span class="regexp">/'false' (! identifierPart )/</span></div><div class="line">NO: <span class="regexp">/'no' (! identifierPart )/</span></div><div class="line">OFF: <span class="regexp">/'off' (! identifierPart )/</span></div><div class="line"></div><div class="line">identifierPart: <span class="regexp">/(: [$_] | UnicodeEscapeSequence)/</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/28/KSON格式的想法/" itemprop="url">
                   KSON格式的想法
                 </a>
@@ -701,7 +813,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -711,7 +823,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
