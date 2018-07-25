@@ -1,0 +1,712 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kotlin,Java,编程，翻译," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="理解Kotlin中的泛型与变体原文 by Tomek Polański 在面向对象编程语言中，一个重要的卖点就是继承。 它允许我们进行诸如将一个子类的实例赋值到一个超类变量上： 12Integer integer = new Integer(1);Number number = interger; 多亏了这个特性，我们可以更加抽象地编写代码，比如声明一个方法： 1void printNumber(">
+<meta name="keywords" content="Kotlin,Java,编程，翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解Kotlin中的泛型与变体">
+<meta property="og:url" content="http://neonmori.github.io/2017/07/30/理解Kotlin中的泛型与变体/index.html">
+<meta property="og:site_name" content="星空航行家的旅行日志">
+<meta property="og:description" content="理解Kotlin中的泛型与变体原文 by Tomek Polański 在面向对象编程语言中，一个重要的卖点就是继承。 它允许我们进行诸如将一个子类的实例赋值到一个超类变量上： 12Integer integer = new Integer(1);Number number = interger; 多亏了这个特性，我们可以更加抽象地编写代码，比如声明一个方法： 1void printNumber(">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-07-25T00:52:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解Kotlin中的泛型与变体">
+<meta name="twitter:description" content="理解Kotlin中的泛型与变体原文 by Tomek Polański 在面向对象编程语言中，一个重要的卖点就是继承。 它允许我们进行诸如将一个子类的实例赋值到一个超类变量上： 12Integer integer = new Integer(1);Number number = interger; 多亏了这个特性，我们可以更加抽象地编写代码，比如声明一个方法： 1void printNumber(">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://neonmori.github.io/2017/07/30/理解Kotlin中的泛型与变体/"/>
+
+  <title> 理解Kotlin中的泛型与变体 | 星空航行家的旅行日志 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">星空航行家的旅行日志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                理解Kotlin中的泛型与变体
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2017-07-30T23:12:00-07:00" content="2017-07-30">
+              2017-07-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="理解Kotlin中的泛型与变体"><a href="#理解Kotlin中的泛型与变体" class="headerlink" title="理解Kotlin中的泛型与变体"></a>理解Kotlin中的泛型与变体</h1><p><a href="https://proandroiddev.com/understanding-generics-and-variance-in-kotlin-714c14564c47" target="_blank" rel="noopener">原文</a> by <a href="https://proandroiddev.com/@tpolansk?source=user_popover" target="_blank" rel="noopener">Tomek Polański</a></p>
+<p>在面向对象编程语言中，一个重要的卖点就是<em>继承</em>。</p>
+<p>它允许我们进行诸如将一个子类的实例赋值到一个超类变量上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer integer = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line">Number number = interger;</span><br></pre></td></tr></table></figure>
+<p>多亏了这个特性，我们可以更加抽象地编写代码，比如声明一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printNumber</span><span class="params">(Number number)</span></span></span><br></pre></td></tr></table></figure>
+<p>而这个方法可以接受两种类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">printNumber(integer);</span><br><span class="line">printNumber(number);</span><br></pre></td></tr></table></figure>
+<p>不幸的是，在Java中的泛型不总是简洁明了的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; integerList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">List&lt;Number&gt; numberList = integerList; <span class="comment">// Compiler Error</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>要真正理解泛型，首先我们需要理解这三个主要概念：</p>
+<ul>
+<li><strong>类</strong> 与 <strong>类型</strong></li>
+<li><strong>子类</strong> 与 <strong>子类型</strong></li>
+<li>变体：<strong>协变</strong>、<strong>逆变</strong>与<strong>不变</strong></li>
+</ul>
+<h2 id="类与类型"><a href="#类与类型" class="headerlink" title="类与类型"></a>类与类型</h2><p>你或许从来没有想过类与类型是两种不同的概念。</p>
+<p>在Java和Kotlin中，所有类都有至少一个与它自身相同的类型，比如一个<code>Integer</code>就同时是一个类也是一个类型。</p>
+<p>从另一个方面来说，在Kotlin中我们也有可空类型，比如<code>String?</code>；我们不能说<code>String?</code>是一个类，因为从表面来看，它依旧是一个<code>String</code>字符串。</p>
+<p>Java和Kotlin中还能举出另一个例子。<code>List</code>是一个类，但<code>List&lt;String&gt;</code>就不是一个类，而是一个类型。</p>
+<p>我们用下面的表格对上面的两个例子进行一下总结：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>类</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>String</code></td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>String?</code></td>
+<td><strong>不是</strong></td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>List</code></td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>List&lt;String&gt;</code></td>
+<td><strong>不是</strong></td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h2 id="子类与子类型"><a href="#子类与子类型" class="headerlink" title="子类与子类型"></a>子类与子类型</h2><p>一个子类需要继承自另一个类。比如，<code>Integer</code>继承自<code>Number</code>，所以<code>Integer</code>是<code>Number</code>的子类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Integer] ==&gt; B[Number]</span><br></pre></td></tr></table></figure>
+<p>这也意味着我们可以进行下面的赋值：</p>
+<p>Java:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer integer = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line">Number number = integer;</span><br></pre></td></tr></table></figure>
+<p>Kotlin:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> integer: <span class="built_in">Int</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> number: Number = integer</span><br></pre></td></tr></table></figure>
+<p>这些操作之所以能够实现是因为<code>Integer</code>是<code>Number</code>的<strong>子类型</strong>。</p>
+<p>现在我们换成可空类型来试一下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> integer: <span class="built_in">Int</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> nummableInteger: <span class="built_in">Int</span>? = integer;</span><br></pre></td></tr></table></figure>
+<p>在这里<code>Int</code>是可空类型<code>Int?</code>的<strong>子类型</strong>，所以我们可以把<code>Int</code>赋值给<code>Int?</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Int] ==&gt; B[Int?]</span><br></pre></td></tr></table></figure>
+<h2 id="变体"><a href="#变体" class="headerlink" title="变体"></a>变体</h2><p>首先让我们来定义几个Kotlin类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>(<span class="keyword">val</span> size: <span class="built_in">Int</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span>(<span class="keyword">val</span> cuteness: <span class="built_in">Int</span>): Animal(<span class="number">100</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spider</span></span>(<span class="keyword">val</span> terrorFactor: <span class="built_in">Int</span>): Animal(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Dog] ==&gt; B[Animal]</span><br><span class="line">C[Spider] ==&gt; B</span><br></pre></td></tr></table></figure>
+<p>现在让我们来检查一下<code>Dog</code>和<code>Spider</code>是不是<code>Animal</code>的<strong>子类型</strong>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> dog: Dog = Dog(<span class="number">10</span>)</span><br><span class="line"><span class="keyword">val</span> spider: Spider = Spider(<span class="number">9000</span>)</span><br><span class="line"><span class="keyword">val</span> animal: Animal = dog</span><br><span class="line">animal = spider</span><br></pre></td></tr></table></figure>
+<p>完美运行：没有编译错误。自己试一下吧！</p>
+<h2 id="协变"><a href="#协变" class="headerlink" title="协变"></a>协变</h2><p>让我们来把这些类型用泛型的<code>List</code>包装一下制造一些更复杂的类型：</p>
+<p>一个需要记住的地方在于这个<code>List</code>是Kotlin中的不可变列表：一旦创建之后其中的内容就不可以被修改。很快你就会明白为什么这很重要了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> dogList: List&lt;Dog&gt; = listOf(Dog(<span class="number">10</span>), Dog(<span class="number">20</span>))</span><br><span class="line"><span class="keyword">val</span> animalList: List&lt;Animal&gt; = dogList</span><br></pre></td></tr></table></figure>
+<p>变体告诉我们<code>List&lt;Dog&gt;</code>和<code>List&lt;Animal&gt;</code>之间的关系和<code>Dog</code>与<code>Animal</code>间的关系一样是<strong>子类型</strong>关系。</p>
+<p>在Kotlin中，<code>dogList</code>可以被赋值给<code>Animal</code>类型的<code>List</code> (<code>val animalList: List&lt;Animal&gt; = dogList</code>)，所以类型关系被<strong>保留</strong>了，并且<code>List&lt;Dog&gt;</code>是<code>List&lt;Animal&gt;</code>的<strong>子类型</strong>。这就是<strong>协变</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Dog] ==&gt; B[Animal]</span><br><span class="line">C[&quot;List&amp;lt;Dog&amp;gt;&quot;] ==&gt; D[&quot;List&amp;lt;Animal&amp;gt;&quot;]</span><br></pre></td></tr></table></figure>
+<h2 id="不变"><a href="#不变" class="headerlink" title="不变"></a>不变</h2><p>在Java中，即使<code>Dog</code>是<code>Animal</code>的子类型，你也不能这样做：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Dog&gt; dogList= <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">List&lt;Animal&gt; animalList = dogList; <span class="comment">// Compiler error</span></span><br></pre></td></tr></table></figure>
+<p>这是因为Java中的泛型类会忽略它的构件之间的<strong>类型／子类型</strong>关系。在这个例子中，<code>List&lt;Dog&gt;</code>不能被赋值给<code>List&lt;Animal&gt;</code>，反之亦然， 而这就被称为<strong>不变</strong>。这里就没有了<strong>子类型</strong>或是<strong>超类型</strong>的关系。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Dog] ==&gt; B[Animal]</span><br><span class="line">C[&quot;List&amp;lt;Dog&amp;gt;&quot;] -.NOT RELATED.- D[&quot;List&amp;lt;Animal&amp;gt;&quot;]</span><br></pre></td></tr></table></figure>
+<h2 id="逆变"><a href="#逆变" class="headerlink" title="逆变"></a>逆变</h2><p>或许我们想要比较<code>Animal</code>实例，这也就是为什么我们创造了一个接口<code>interface Compare&lt;T&gt;</code>，和一个元方法<code>compare(T item1, T item2)</code>，这个方法可以判断两个对象的先后次序。</p>
+<p>无论何时我们要通过可爱度来比较🐶的时候，我们可以这样实现这个接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> dogCompare:Compare&lt;Dog&gt; = <span class="keyword">object</span>: Compare&lt;Dog&gt; &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">compare</span><span class="params">(first: <span class="type">Dog</span>, second: <span class="type">Dog</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> first.cuteness - second.cuteness</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是如果你尝试将这个狗狗比较器赋值給一个动物比较器的话：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animalCompare: Compare&lt;Animal&gt; = dogCompare <span class="comment">// Compiler Error</span></span><br></pre></td></tr></table></figure>
+<p>这段代码出错的一个好处是：如果可以这样赋值的话，那么我们也可以用这个比较器来比较蜘蛛的可怕度， 但是这样就会出错，因为狗狗比较器只能用来比较狗狗而不是蜘蛛。</p>
+<p>换个角度来说，如果我们要比较所有动物的话，那么需要一个能够同时衡量狗狗和蜘蛛的机制：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> animalCompare: Compare&lt;Animal&gt; = <span class="keyword">object</span>: Compare&lt;Animal&gt; &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">compare</span><span class="params">(first: <span class="type">Animal</span>, second: <span class="type">Animal</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> first.size — second.size</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">val</span> spiderCompare: Compare&lt;Spider&gt; = animalCompare <span class="comment">// Works nicely!</span></span><br></pre></td></tr></table></figure>
+<p>我们可以看到<code>Spider</code>是<code>Animal</code>的<strong>子类型</strong>，但是<code>Compare&lt;Animal&gt;</code>却成为了<code>Compare&lt;Spider&gt;</code>的<strong>子类型</strong>——在这里，类型关系发生了<strong>反转</strong>。这一种关系也被称为<strong>逆变</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A[Spider] ==&gt; B[Animal]</span><br><span class="line">C[&quot;List&amp;lt;Animal&amp;gt;&quot;] ==&gt; D[&quot;List&amp;lt;Spider&amp;gt;&quot;]</span><br></pre></td></tr></table></figure>
+<h2 id="Java与Kotlin"><a href="#Java与Kotlin" class="headerlink" title="Java与Kotlin"></a>Java与Kotlin</h2><p>多亏了Java，我们可以声明泛型的协变与逆变。</p>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>要声明一个<strong>协变</strong>的泛型类型，你只需要：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Dog&gt; dogs = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">List&lt;? extends Animal&gt; animals = dogs;</span><br></pre></td></tr></table></figure>
+<p><code>extends</code>关键字将动物列表与狗狗列表之间的关系声明为了<strong>协变</strong>。</p>
+<p>需要<strong>逆变</strong>的时候，只需：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Compare&lt;Animal&gt; animalCompare = (first, second) -&gt; first.getSize() - second.getSize();</span><br><span class="line">Compare&lt;? <span class="keyword">super</span> Spider&gt; spiderCompare = animalCompare;</span><br></pre></td></tr></table></figure>
+<p><code>super</code>关键字将动物比较器与蜘蛛比较器之间的关系声明为了<strong>逆变</strong>。</p>
+<p>这种在使用时创建泛型变体的用法叫做<strong>调用处变体</strong>。</p>
+<h2 id="Kotlin"><a href="#Kotlin" class="headerlink" title="Kotlin"></a>Kotlin</h2><p>在Kotlin中并没有什么魔法，它也提供了为泛型声明<strong>协变</strong>与<strong>逆变</strong>的途径。</p>
+<h3 id="Out关键字"><a href="#Out关键字" class="headerlink" title="Out关键字"></a>Out关键字</h3><p>如果你浏览过Kotlin的不变列表的定义，你会发现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">List</span>&lt;<span class="type">out E</span>&gt; </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">get</span><span class="params">(index: <span class="type">Int</span>)</span></span>: E</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个<code>out</code>关键字表示这个<code>List</code>接口中的方法只能返回类型<code>E</code>并且不能接受<code>E</code>类型作为泛型参数。</p>
+<p>这个限制使得<code>List</code>获得了<strong>协变</strong>能力。</p>
+<h3 id="In关键字"><a href="#In关键字" class="headerlink" title="In关键字"></a>In关键字</h3><p>当你查看Kotlin中<code>Compare</code>接口的定义，你会有不一样的发现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Compare</span>&lt;<span class="type">in T</span>&gt; </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">compare</span><span class="params">(first: <span class="type">T</span>, second: <span class="type">T</span>)</span></span>: <span class="built_in">Int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，泛型参数前面多了一个<code>in</code>关键字。</p>
+<p>这意味着<code>Compare</code>接口下所有的方法都可以使用<code>T</code>作为泛型参数但是不能返回T类型。</p>
+<p>这个限制使得<code>Compare</code>获得了<strong>逆变</strong>能力。</p>
+<p>在Kotlin中，泛型变体的问题是编写类声明的开发者需要考虑的问题，而不应该丢给使用这些代码的程序员。这也就是为什么这个机制被称为<strong>声明处变体</strong>的原因。</p>
+<hr>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>协变</th>
+<th>逆变</th>
+<th>不变</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目的</td>
+<td>生产者</td>
+<td>消费者</td>
+<td>生产者+消费者</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>ImmutableList</td>
+<td>Compare</td>
+<td>MutableList</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>extends</td>
+<td>super</td>
+<td></td>
+</tr>
+<tr>
+<td>Kotlin</td>
+<td>out</td>
+<td>in</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>现在你应该已经知道了你需要声明什么样的泛型类了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kotlin/" rel="tag">#Kotlin</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/编程，翻译/" rel="tag">#编程，翻译</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/01/CSON的Pegex语法解析/" rel="next" title="CSON的Pegex语法解析">
+                <i class="fa fa-chevron-left"></i> CSON的Pegex语法解析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/24/KOTOKO-夏恋/" rel="prev" title="KOTOKO - 夏恋">
+                KOTOKO - 夏恋 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/2584204?v=3&s=460"
+               alt="Kirkonväki" />
+          <p class="site-author-name" itemprop="name">Kirkonväki</p>
+          <p class="site-description motion-element" itemprop="description">现在立刻马上！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理解Kotlin中的泛型与变体"><span class="nav-number">1.</span> <span class="nav-text">理解Kotlin中的泛型与变体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类与类型"><span class="nav-number">1.1.</span> <span class="nav-text">类与类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子类与子类型"><span class="nav-number">1.2.</span> <span class="nav-text">子类与子类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变体"><span class="nav-number">1.3.</span> <span class="nav-text">变体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协变"><span class="nav-number">1.4.</span> <span class="nav-text">协变</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不变"><span class="nav-number">1.5.</span> <span class="nav-text">不变</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆变"><span class="nav-number">1.6.</span> <span class="nav-text">逆变</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java与Kotlin"><span class="nav-number">1.7.</span> <span class="nav-text">Java与Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java"><span class="nav-number">1.8.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin"><span class="nav-number">1.9.</span> <span class="nav-text">Kotlin</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Out关键字"><span class="nav-number">1.9.1.</span> <span class="nav-text">Out关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In关键字"><span class="nav-number">1.9.2.</span> <span class="nav-text">In关键字</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kirkonväki</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
